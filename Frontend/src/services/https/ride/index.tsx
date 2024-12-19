@@ -74,8 +74,7 @@ async function UpdateRide(data: RideInterface) {
     }
   }
   
-  
-  
+
 
 async function DeleteRideByID(id: number | undefined) {
     if (id === undefined) return false;
