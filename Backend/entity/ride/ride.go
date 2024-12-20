@@ -11,5 +11,7 @@ type Ride struct {
     
 	// 1 ride สามารถมีหลายรอบ
 	RideSchedules [] RideSchedule `gorm:"foreignKey:ride_id"`
+
+	
     
 }

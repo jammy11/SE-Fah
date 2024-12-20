@@ -2,7 +2,10 @@ package config
 
 import (
 	"fmt"
+	"time"
+
 	"backend/entity/ride"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -28,8 +31,9 @@ func ConnectionDB() {
 func SetupDatabase() {
 	// Migrate the schema
 	db.AutoMigrate(
-		&entity.Ride{}, // Migrate the Ride entity
-		&entity.RideSchedule{},
+		&entity.Ride{},           // Migrate the Ride entity
+		&entity.RideSchedule{},   // Migrate the RideSchedule entity
+		&entity.Booking{},        // Migrate the Booking entity
 	)
 
 	// Add initial Ride data
@@ -76,6 +80,7 @@ func SetupDatabase() {
 			Capacity:    10,
 			Image:       "https://capitalread.co/wp-content/uploads/2023/10/shutterstock_1723635454-1024x683.jpg", // Replace with an actual URL
 		},
+		// Add more rides here if needed
 	}
 
 	// Insert initial data if not already present
@@ -83,39 +88,73 @@ func SetupDatabase() {
 		db.FirstOrCreate(&ride, entity.Ride{RideName: ride.RideName})
 	}
 
-	
 	fmt.Println("Initial rides data inserted")
 
-		// Add initial RideSchedule data
-		for _, ride := range rides {
-			var schedules []entity.RideSchedule
-	
-			// สร้างรอบเวลาเริ่มต้นตั้งแต่ 8:00 ถึง 21:00 น.
-			hour := 8
-			minute := 0
-			for hour < 21 || (hour == 20 && minute < 45) { // สิ้นสุดที่ 20:45
-				startTime := fmt.Sprintf("%02d:%02d", hour, minute)
-				minute += 45
-				if minute >= 60 {
-					hour += 1
-					minute -= 60
-				}
-				endTime := fmt.Sprintf("%02d:%02d", hour, minute)
-	
-				schedule := entity.RideSchedule{
-					StartTime: startTime,
-					EndTime:   endTime,
-					Capacity:  uint(ride.Capacity),
-					RideID:    ride.ID,
-				}
-				schedules = append(schedules, schedule)
+	// Add initial RideSchedule data
+	for _, ride := range rides {
+		var schedules []entity.RideSchedule
+
+		// Create ride schedules
+		hour := 8
+		minute := 0
+		for hour < 21 || (hour == 20 && minute < 45) { // Ends at 20:45
+			startTime := fmt.Sprintf("%02d:%02d", hour, minute)
+			minute += 45
+			if minute >= 60 {
+				hour += 1
+				minute -= 60
 			}
-	
-			// Insert schedules into the database
-			for _, schedule := range schedules {
-				db.FirstOrCreate(&schedule, entity.RideSchedule{StartTime: schedule.StartTime, RideID: ride.ID})
+			endTime := fmt.Sprintf("%02d:%02d", hour, minute)
+
+			schedule := entity.RideSchedule{
+				StartTime: startTime,
+				EndTime:   endTime,
+				Capacity:  uint(ride.Capacity),
+				RideID:    ride.ID,
 			}
+			schedules = append(schedules, schedule)
 		}
-	
-		fmt.Println("Initial ride schedules inserted")
+
+		// Insert schedules into the database
+		for _, schedule := range schedules {
+			db.FirstOrCreate(&schedule, entity.RideSchedule{StartTime: schedule.StartTime, RideID: ride.ID})
+		}
+	}
+
+	fmt.Println("Initial ride schedules inserted")
+
+	// Add an initial Booking using RideSchedule StartTime
+	var rideSchedule entity.RideSchedule
+	// Fetch a valid RideSchedule for the first ride (index 0) - you can change this as per your requirement
+	db.Where("ride_id = ?", rides[0].ID).First(&rideSchedule)
+
+	// Ensure a valid RideSchedule was found
+	if rideSchedule.ID == 0 {
+		fmt.Println("No valid RideSchedule found for booking.")
+		return
+	}
+
+	// Parse StartTime from string to time.Time
+	startTimeStr := rideSchedule.StartTime
+	layout := "15:04" // Define layout based on how the time is stored (HH:mm format)
+
+	// Parse the time string into time.Time object
+	startTime, err := time.Parse(layout, startTimeStr)
+	if err != nil {
+		fmt.Println("Error parsing StartTime:", err)
+		return
+	}
+
+	// Insert booking with RideSchedule StartTime as the booking time
+	initialBooking := entity.Booking{
+		BookingDate:    "2024-12-21", // Use your desired booking date
+		TicketID:       1,             // Change the ticket ID if needed
+		Time:           startTime,     // Use the parsed time
+		RideID:         rides[0].ID,    // Use the first ride's ID (Ferris Wheel)
+		RideScheduleID: rideSchedule.ID, // Use the RideSchedule ID
+	}
+
+	// Insert the initial booking into the database
+	db.FirstOrCreate(&initialBooking, entity.Booking{TicketID: initialBooking.TicketID, RideID: initialBooking.RideID})
+	fmt.Println("Initial booking data inserted")
 }

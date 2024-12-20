@@ -3,69 +3,68 @@ package controller
 import (
 	"backend/config"
 	"backend/entity/ride"
-	
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
 // CreateRideSchedule สร้างตารางเวลาของเครื่องเล่นใหม่
 func CreateRideSchedule(c *gin.Context) {
-	var rideSchedule entity.RideSchedule
+	var schedule entity.RideSchedule
 
-	// bind ข้อมูลจาก JSON เข้าตัวแปร rideSchedule
-	if err := c.ShouldBindJSON(&rideSchedule); err != nil {
+	// bind ข้อมูลจาก JSON เข้าตัวแปร schedule
+	if err := c.ShouldBindJSON(&schedule); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	db := config.DB()
 
-	// สร้างตารางเวลาใหม่
-	rs := entity.RideSchedule{
-		StartTime: rideSchedule.StartTime,
-		EndTime:   rideSchedule.EndTime,
-		Capacity:  rideSchedule.Capacity,
+	// สร้างตารางเวลาของเครื่องเล่นใหม่
+	newSchedule := entity.RideSchedule{
+		StartTime: schedule.StartTime,
+		EndTime:   schedule.EndTime,
+		Capacity:  schedule.Capacity,
+		RideID:    schedule.RideID,
 	}
 
 	// บันทึกตารางเวลา
-	if err := db.Create(&rs).Error; err != nil {
+	if err := db.Create(&newSchedule).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": rs})
+	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": newSchedule})
 }
 
 // GET /rideschedule/:id
 func GetRideSchedule(c *gin.Context) {
 	ID := c.Param("id")
-	var rideSchedule entity.RideSchedule
+	var schedule entity.RideSchedule
 
 	db := config.DB()
-	results := db.Preload("Ride").Preload("Bookings").First(&rideSchedule, ID)
+	results := db.Preload("Ride").Preload("Bookings").First(&schedule, ID)
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
 		return
 	}
-	if rideSchedule.ID == 0 {
+	if schedule.ID == 0 {
 		c.JSON(http.StatusNoContent, gin.H{})
 		return
 	}
-	c.JSON(http.StatusOK, rideSchedule)
+	c.JSON(http.StatusOK, schedule)
 }
 
 // GET /rideschedules
 func ListRideSchedules(c *gin.Context) {
-	var rideSchedules []entity.RideSchedule
+	var schedules []entity.RideSchedule
 
 	db := config.DB()
-	results := db.Preload("Ride").Preload("Bookings").Find(&rideSchedules)
+	results := db.Preload("Ride").Preload("Bookings").Find(&schedules)
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, rideSchedules)
+	c.JSON(http.StatusOK, schedules)
 }
 
 // DELETE /rideschedules/:id
@@ -81,23 +80,23 @@ func DeleteRideSchedule(c *gin.Context) {
 
 // PATCH /rideschedules/:id
 func UpdateRideSchedule(c *gin.Context) {
-	var rideSchedule entity.RideSchedule
+	var schedule entity.RideSchedule
 
-	rideScheduleID := c.Param("id")
+	scheduleID := c.Param("id")
 
 	db := config.DB()
-	result := db.First(&rideSchedule, rideScheduleID)
+	result := db.First(&schedule, scheduleID)
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
 		return
 	}
 
-	if err := c.ShouldBindJSON(&rideSchedule); err != nil {
+	if err := c.ShouldBindJSON(&schedule); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
 		return
 	}
 
-	result = db.Save(&rideSchedule)
+	result = db.Save(&schedule)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
 		return
@@ -106,7 +105,7 @@ func UpdateRideSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
 
-// CountRideSchedules นับจำนวนตารางเวลาเครื่องเล่นทั้งหมด
+// CountRideSchedules นับจำนวนตารางเวลาของเครื่องเล่นทั้งหมด
 func CountRideSchedules(c *gin.Context) {
 	var count int64
 	db := config.DB()

@@ -40,6 +40,14 @@ func main() {
 		router.DELETE("/rideschedules/:id",controller.DeleteRideSchedule)
 		router.GET("/rideschedules/count", controller.CountRideSchedules)
 
+		// Routes สำหรับ Booking
+		router.GET("/bookings", controller.ListBookings)
+		router.GET("/booking/:id", controller.GetBooking)
+		router.POST("/bookings", controller.CreateBooking)
+		router.PATCH("/bookings/:id", controller.UpdateBooking)
+		router.DELETE("/bookings/:id", controller.DeleteBooking)
+		router.GET("/bookings/count", controller.CountBookings)
+
 
 
 	// 	// Count จำนวน Ride
