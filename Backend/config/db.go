@@ -29,6 +29,7 @@ func SetupDatabase() {
 	// Migrate the schema
 	db.AutoMigrate(
 		&entity.Ride{}, // Migrate the Ride entity
+		&entity.RideSchedule{},
 	)
 
 	// Add initial Ride data
@@ -82,5 +83,39 @@ func SetupDatabase() {
 		db.FirstOrCreate(&ride, entity.Ride{RideName: ride.RideName})
 	}
 
+	
 	fmt.Println("Initial rides data inserted")
+
+		// Add initial RideSchedule data
+		for _, ride := range rides {
+			var schedules []entity.RideSchedule
+	
+			// สร้างรอบเวลาเริ่มต้นตั้งแต่ 8:00 ถึง 21:00 น.
+			hour := 8
+			minute := 0
+			for hour < 21 || (hour == 20 && minute < 45) { // สิ้นสุดที่ 20:45
+				startTime := fmt.Sprintf("%02d:%02d", hour, minute)
+				minute += 45
+				if minute >= 60 {
+					hour += 1
+					minute -= 60
+				}
+				endTime := fmt.Sprintf("%02d:%02d", hour, minute)
+	
+				schedule := entity.RideSchedule{
+					StartTime: startTime,
+					EndTime:   endTime,
+					Capacity:  uint(ride.Capacity),
+					RideID:    ride.ID,
+				}
+				schedules = append(schedules, schedule)
+			}
+	
+			// Insert schedules into the database
+			for _, schedule := range schedules {
+				db.FirstOrCreate(&schedule, entity.RideSchedule{StartTime: schedule.StartTime, RideID: ride.ID})
+			}
+		}
+	
+		fmt.Println("Initial ride schedules inserted")
 }

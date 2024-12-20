@@ -4,10 +4,12 @@ import "gorm.io/gorm"
      
 type Ride struct {
     gorm.Model 
-	RideName    string     // ชื่อเครื่องเล่น
-	Description string     // คำอธิบาย
-	Capacity    int        // ความจุ
-	Image       string     // URL ภาพ
+	RideName    string    `json:"RideName"`
+	Description string    `json:"Description"`
+	Capacity    int       `json:"capacity"`  
+	Image       string    `json:"Image"`
     
+	// 1 ride สามารถมีหลายรอบ
+	RideSchedules [] RideSchedule `gorm:"foreignKey:ride_id"`
     
 }

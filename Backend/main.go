@@ -32,26 +32,19 @@ func main() {
 		router.PATCH("/rides", controller.UpdateRide)
 		router.DELETE("/rides/:id", controller.DeleteRide)
 
-	// 	// Routes สำหรับ RideSchedule
-	// 	router.GET("/rideschedules", controller.ListRideSchedules)
-	// 	router.GET("/rideschedule/:id", controller.GetRideSchedule)
-	// 	router.POST("/rideschedules", controller.CreateRideSchedule)
-	// 	router.PATCH("/rideschedules", controller.UpdateRideSchedule)
-	// 	router.DELETE("/rideschedules/:id", controller.DeleteRideSchedule)
+		// Routes สำหรับ RideSchedule
+		router.GET("/rideschedules", controller.ListRideSchedules)
+		router.GET("/rideschedule/:id", controller.GetRideSchedule)
+		router.POST("/rideschedules", controller.CreateRideSchedule)
+		router.PATCH("/rideschedules/:id", controller.UpdateRideSchedule)
+		router.DELETE("/rideschedules/:id",controller.DeleteRideSchedule)
+		router.GET("/rideschedules/count", controller.CountRideSchedules)
 
-	// 	// Routes สำหรับ RideBooking
-	// 	router.GET("/ridebookings", controller.ListRideBookings)
-	// 	router.GET("/ridebooking/:id", controller.GetRideBooking)
-	// 	router.POST("/ridebookings", controller.CreateRideBooking)
-	// 	router.PATCH("/ridebookings", controller.UpdateRideBooking)
-	// 	router.DELETE("/ridebookings/:id", controller.DeleteRideBooking)
+
 
 	// 	// Count จำนวน Ride
 		router.GET("/rides/count", controller.CountRides)
-	// 	// Count จำนวน RideSchedule
-	// 	router.GET("/rideschedules/count", controller.CountRideSchedules)
-	// 	// Count จำนวน RideBooking
-	// 	router.GET("/ridebookings/count", controller.CountRideBookings)
+	
 	 }
 
 	// รันเซิร์ฟเวอร์
