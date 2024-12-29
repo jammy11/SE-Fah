@@ -82,4 +82,4 @@ async function DeleteBookingByUser(userId: number | undefined) {
     return await fetchData(`${apiUrl}/bookings/${userId}`, requestOptions);
 }
 
-export { GetBookings, GetBookingById, CreateBooking, UpdateBooking, DeleteBookingByID, DeleteBookingByUser, apiUrl };
+export { GetBookings, GetBookingById, CreateBooking, UpdateBooking, DeleteBookingByID, DeleteBookingByUser };

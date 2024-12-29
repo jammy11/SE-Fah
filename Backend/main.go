@@ -6,6 +6,8 @@ import (
 	"backend/controller/ride"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/gin-contrib/cors"
 )
 
 const PORT = "3036"
@@ -20,6 +22,8 @@ func main() {
 	r := gin.Default()
 
 	r.Use(CORSMiddleware())
+
+	r.Use(cors.Default())
 
 	// r.POST("/login", controller.SignIn)
 

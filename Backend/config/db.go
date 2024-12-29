@@ -88,27 +88,4 @@ func SetupDatabase() {
 
 	fmt.Println("Initial rides data inserted")
 
-	// Add initial Booking data
-	bookings := []entity.Booking{
-		{
-			TicketID:    1, // Assuming ticket with ID 1 exists
-			Date: 	"2024-10-09",
-			Time:        "08.00-08.45 (45 นาที)",
-			RideID:      1, // Assuming ride with ID 1 exists
-		},
-		{
-			TicketID:    2, // Assuming ticket with ID 2 exists
-			Date: 	"2024-01-04",
-			Time:        "10.00-10.45 (45 นาที)",
-			RideID:      2, // Assuming ride with ID 2 exists
-		},
-		
-	}
-
-	// Insert initial booking data if not already present
-	for _, booking := range bookings {
-		db.FirstOrCreate(&booking, entity.Booking{Date: booking.Date, TicketID: booking.TicketID, RideID: booking.RideID})
-	}
-
-	fmt.Println("Initial bookings data inserted")
 }

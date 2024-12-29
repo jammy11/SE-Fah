@@ -1,6 +1,9 @@
+import { RideInterface } from "./IRide";
+
 export interface BookingInterface {
-    BookingDate?: string;       // วันที่จอง
-    TicketID?: number;          // รหัสตั๋ว
-    Time?: string ;        
+    TicketID?: number;
     Date?: string;
+    Time?: string;
+    RideID?: number;
+    Ride?: RideInterface
 }
