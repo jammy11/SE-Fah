@@ -1,11 +1,8 @@
 import React from 'react';
 import { Layout, Button, Form, Input, Select, DatePicker, Card } from 'antd';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import Navbar from '../../../../components/navbar';
 import RideCard from '../../../../components/RideCard';
-
-
 
 const { Option } = Select;
 
@@ -35,38 +32,6 @@ const Booking: React.FC = () => {
   if (!ride) {
     return <div>ไม่พบข้อมูลเครื่องเล่น</div>;
   }
-
-  const onFinish = async (values: any) => {
-    console.log('ข้อมูลที่กรอก: ', values); // เพิ่มการแสดงค่าที่กรอกเพื่อการตรวจสอบ
-
-    // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
-    if (!values.TicTik || !values.date || !values.time) {
-      alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-      return;
-    }
-
-    try {
-      // ตรวจสอบข้อมูลก่อนส่งไปยัง API
-      console.log('กำลังส่งข้อมูลไปยัง API...');
-      const response = await axios.post(`http://localhost:3036/bookings`, {
-        Ticket: values.ticket_id,
-        date: values.date.format('YYYY-MM-DD'), // ตรวจสอบรูปแบบวันที่
-        time: values.time,
-        rideId: ride.id,
-});
-
-
-      if (response.status === 200) {
-        alert('การจองสำเร็จ');
-        // ทำอะไรต่อหลังจากการจองสำเร็จ เช่น redirect ไปหน้าอื่น หรือ reset form
-      } else {
-        alert('การจองไม่สำเร็จ');
-      }
-    } catch (error) {
-      console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล:', error);
-      alert('เกิดข้อผิดพลาดในการจอง');
-    }
-  };
 
   return (
     <Layout
@@ -104,7 +69,7 @@ const Booking: React.FC = () => {
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Form name="bookingForm" onFinish={onFinish} layout="vertical">
+          <Form name="bookingForm" layout="vertical">
             <Form.Item
               label="TicTik"
               name="TicTik"
@@ -138,7 +103,6 @@ const Booking: React.FC = () => {
             <Form.Item style={{ textAlign: 'center' }}>
               <Button
                 type="primary"
-                htmlType="submit"
                 style={{
                   width: '100%',
                   fontSize: '16px',
