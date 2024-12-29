@@ -4,6 +4,7 @@ import RidePage from './pages/admin/ride'; // Import RidePage component
 import CreateRidePage from './pages/admin/ride/create';
 import EditRidePage from './pages/admin/ride/edit';
 import Ride from './pages/user/ride';
+import Booking from './pages/user/ride/booking';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/createrides" element={<CreateRidePage />} />
       <Route path="/editrides/:id" element={<EditRidePage />} />
       <Route path="/homerides" element={<Ride />} />
+      <Route path="/booking" element={<Booking />} />
     </Routes>
   );
 }

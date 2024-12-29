@@ -36,10 +36,10 @@ const Navbar: React.FC = () => {
             alignItems: "center",
             gap: "10px",
             color: "black", // Black text for logo
-            fontSize: "28px",
+            fontSize: "18px",
           }}
         >
-          <GiCastle style={{ fontSize: "36px", color: "black" }} /> {/* Castle Icon */}
+          <GiCastle style={{ fontSize: "30px", color: "black" }} /> {/* Castle Icon */}
           <span>CASTLE-KINGDOM</span>
         </div>
 
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
               style={{
                 color: "black", // Black text for menu items
                 fontWeight: "500",
-                fontSize: "18px",
+                fontSize: "15px",
               }}
             >
               <a href={`/#${item.replace(" ", "")}`}>{item}</a>

@@ -131,7 +131,7 @@ const editRide = (ride: any) => {
               icon={<PlusOutlined />}
               onClick={() => navigate("/createrides")}
               style={{
-                backgroundColor: "#219EBC",
+                backgroundColor: "#FFB703",
                 border: "none",
                 color: "white",
                 borderRadius: "8px",
@@ -178,7 +178,7 @@ const editRide = (ride: any) => {
                       {ride.Description}
                     </p>
                     <p style={{ color: "#023047" }}>
-                      <strong>Capacity:</strong> {ride.Capacity}
+                      <strong>Capacity:</strong> {ride.capacity}
                     </p>
 
                     {/* Buttons */}

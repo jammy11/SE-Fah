@@ -8,9 +8,9 @@ type Ride struct {
 	Description string    `json:"Description"`
 	Capacity    int       `json:"capacity"`  
 	Image       string    `json:"Image"`
-    
-	// 1 ride สามารถมีหลายรอบ
-	RideSchedules [] RideSchedule `gorm:"foreignKey:ride_id"`
+
+	
+	Bookings [] Booking `gorm:"foreignKey:ride_id"`
 
 	
     

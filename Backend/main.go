@@ -32,21 +32,19 @@ func main() {
 		router.PATCH("/rides", controller.UpdateRide)
 		router.DELETE("/rides/:id", controller.DeleteRide)
 
-		// Routes สำหรับ RideSchedule
-		router.GET("/rideschedules", controller.ListRideSchedules)
-		router.GET("/rideschedule/:id", controller.GetRideSchedule)
-		router.POST("/rideschedules", controller.CreateRideSchedule)
-		router.PATCH("/rideschedules/:id", controller.UpdateRideSchedule)
-		router.DELETE("/rideschedules/:id",controller.DeleteRideSchedule)
-		router.GET("/rideschedules/count", controller.CountRideSchedules)
-
-		// Routes สำหรับ Booking
-		router.GET("/bookings", controller.ListBookings)
-		router.GET("/booking/:id", controller.GetBooking)
+		// กำหนดเส้นทางสำหรับการสร้างการจอง
 		router.POST("/bookings", controller.CreateBooking)
-		router.PATCH("/bookings/:id", controller.UpdateBooking)
+		// กำหนดเส้นทางสำหรับการดึงข้อมูลการจอง
+		router.GET("/bookings/:id", controller.GetBookingWithRide)
+		// กำหนดเส้นทางสำหรับการดึงข้อมูลการจองทั้งหมด
+		router.GET("/bookings", controller.ListBookings)
+		// กำหนดเส้นทางสำหรับการลบการจอง
 		router.DELETE("/bookings/:id", controller.DeleteBooking)
+		// กำหนดเส้นทางสำหรับการอัพเดตการจอง
+		router.PUT("/bookings/:id", controller.UpdateBooking)
+		// กำหนดเส้นทางสำหรับการนับการจอง
 		router.GET("/bookings/count", controller.CountBookings)
+
 
 
 

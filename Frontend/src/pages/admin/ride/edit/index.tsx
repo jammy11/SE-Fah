@@ -31,7 +31,7 @@ const EditRidePage: React.FC = () => {
       form.setFieldsValue({
         RideName: ride.RideName,
         Description: ride.Description,
-        Capacity: ride.Capacity,
+        Capacity: ride.capacity,
       });
       setImage(ride.Image || null);
     }
@@ -46,8 +46,19 @@ const EditRidePage: React.FC = () => {
         message.error("Please upload an image!");
         return;
       }
+  
+      // สร้างข้อมูลอัปเดต
       const updatedRide = { RideID: ride?.RideID, ...values, Image: image };
+  
+      // ตรวจสอบว่า RideID ตรงกันหรือไม่
+      if (values.RideID && values.RideID !== ride?.RideID) {
+        message.error("Ride ID mismatch! Cannot update the ride.");
+        return;
+      }
+  
       console.log("Updated ride data:", updatedRide);
+  
+      // ส่งข้อมูลอัปเดต
       const success = await UpdateRide(updatedRide);
       if (success) {
         message.success("Ride updated successfully!");
@@ -60,7 +71,7 @@ const EditRidePage: React.FC = () => {
       console.error("Update error:", error);
       message.error("An error occurred while updating the ride.");
     }
-  };
+  }; 
 
   // ฟังก์ชันสำหรับการอัปโหลดรูปภาพ
   const onDrop = (acceptedFiles: File[]) => {

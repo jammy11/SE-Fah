@@ -40,6 +40,7 @@ async function GetBookingById(id: number | undefined) {
 }
 
 async function CreateBooking(data: BookingInterface) {
+    console.log("Sending Payload:", data); // ตรวจสอบข้อมูลที่ส่ง
     const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -48,6 +49,8 @@ async function CreateBooking(data: BookingInterface) {
 
     return await fetchData(`${apiUrl}/bookings`, requestOptions);
 }
+
+
 
 async function UpdateBooking(data: BookingInterface) {
     const requestOptions = {
@@ -69,10 +72,14 @@ async function DeleteBookingByID(id: number | undefined) {
     return await fetchData(`${apiUrl}/bookings/${id}`, requestOptions);
 }
 
-export {
-    GetBookings,
-    GetBookingById,
-    CreateBooking,
-    UpdateBooking,
-    DeleteBookingByID,
-};
+async function DeleteBookingByUser(userId: number | undefined) {
+    if (userId === undefined) return false;
+
+    const requestOptions = {
+        method: "DELETE",
+    };
+
+    return await fetchData(`${apiUrl}/bookings/${userId}`, requestOptions);
+}
+
+export { GetBookings, GetBookingById, CreateBooking, UpdateBooking, DeleteBookingByID, DeleteBookingByUser, apiUrl };
