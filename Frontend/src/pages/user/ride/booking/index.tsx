@@ -183,10 +183,13 @@ const Booking: React.FC = () => {
   const onFinish = async (values: any) => {
     const bookingData: BookingInterface = {
       TicketID: Number(values.Ticket),
-      Date: values.date.format("YYYY-MM-DD"),
+      Date: values.date ? values.date.format("YYYY-MM-DD") : undefined,
       Time: values.time,
-      RideID: ride.RideID,
+      RideID:ride.ID, 
+      
     };
+    console.log("Booking Data:", bookingData);
+
 
     try {
       const result = await CreateBooking(bookingData);
